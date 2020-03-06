@@ -5,7 +5,7 @@ pub mod stats {
         Age
     }
 
-    #[derive(Debug)]
+    #[derive(Debug,Clone, Copy)]
     pub struct Statistics {
         day: u32,
         queens_alive: u32,
@@ -16,6 +16,7 @@ pub mod stats {
         death_by_hunger: u32,
         eggs_not_hatched: u32,
         eggs_hatched: u32,
+        stored: bool
     }
 
     impl Statistics {
@@ -31,6 +32,7 @@ pub mod stats {
                 death_by_hunger: 0,
                 eggs_not_hatched: 0,
                 eggs_hatched: 0,
+                stored: false,
             }
         }
 
@@ -95,6 +97,20 @@ pub mod stats {
             println!("Ants alive: {} | Ants dead: {}", self.workers_alive, self.workers_dead);
             println!("Ants dead by hunger: {} | Ants dead by age: {}", self.death_by_hunger, self.death_by_age);
             println!("Unhatched eggs: {} | Hatched eggs: {}", self.eggs_not_hatched, self.eggs_hatched);
+        }
+
+        pub fn to_string(&self) -> String{
+           format!("Day {}\n
+            Queens alive: {}\n
+            Queens dead: {}\n
+            Ants alive: {}\n
+            Ants dead: {}\n
+            Ants dead by hunger: {}\n
+            Ants dead by age: {}\n
+            Unhatched eggs: {}\n
+            Hatched eggs: {}", 
+            self.day, self.queens_alive, self.queens_dead, self.workers_alive, self.workers_dead, self.death_by_hunger, self.death_by_age, self.eggs_not_hatched, self.eggs_hatched
+            )
         }
     }
 }

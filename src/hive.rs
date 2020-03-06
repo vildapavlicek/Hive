@@ -45,7 +45,7 @@ pub mod hive {
 
         }
 
-        pub fn run(&mut self) {
+        pub async fn run(&mut self) {
             
             // let's add atleast one egg at the start
             self.eggs.push(Egg::new());
@@ -55,7 +55,6 @@ pub mod hive {
                 
                 for queen in self.queens.iter_mut() {
                     if queen.is_alive(){
-                        //process_queen_cycle(&mut self.storage, &mut self.eggs, &mut queen);
                         feed(&mut self.storage, queen, &mut self.stats);
                         produce_egg(&mut self.eggs, queen, &mut self.stats);
                         age(queen, &mut self.stats);
@@ -82,9 +81,12 @@ pub mod hive {
                 self.queens.retain(|q| q.is_alive());
                 self.workers.retain(|w| w.is_alive());
                 self.stats.report();
+                self.producer.add_message(self.stats.to_string(), self.stats.get_day());
 
-                self.producer.produce("hive", &self.stats);
+                //self.producer.produce("hive", &self.stats).await;
             }
+
+            println!("Hive loop finished");
         }
     }
 

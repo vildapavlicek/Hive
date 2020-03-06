@@ -3,9 +3,11 @@ pub mod producer;
 use crate::hive::hive::Hive;
 pub use producer::producer::MyProducer;
 
-fn main() {
-    println!("Hello, world!");
-    let producer = MyProducer::new("host.docker.internal:9092");
+
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let producer = MyProducer::new("localhost:9092");
     let mut hive = Hive::new(producer);
-    hive.run();
+    hive.run().await;
+    Ok(())
 }
