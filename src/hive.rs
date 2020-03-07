@@ -7,7 +7,8 @@ pub mod hive {
     use crate::hive::unit::units::{Queen, Worker, Egg, Ant, UnitTypes};
     use crate::hive::unit::warehouse::Storage;
     use crate::hive::statistics::stats::{Statistics, DeathType};
-    use crate::producer::producer::MyProducer;
+    use crate::producer::producer::{MyProducer, Message};
+    use std::sync::mpsc::Sender;
 
     const WORKERS_AT_START: u32 = 20;
 
@@ -17,18 +18,18 @@ pub mod hive {
         eggs: Vec<Egg>,
         storage: Storage,
         stats: Statistics,
-        producer: MyProducer,
+        tx: Sender<Message>,
     }
 
     impl Hive {
-        pub fn new(producer: MyProducer) -> Self {
+        pub fn new(tx: Sender<Message>) -> Self {
             Hive {
                 queens: vec![Queen::new()],
                 workers: Worker::generate_workers(20),
                 eggs: vec![Egg::new()],
-                storage: Storage::new(1500),
+                storage: Storage::new(15000),
                 stats: Statistics::new(1, WORKERS_AT_START),
-                producer: producer,
+                tx: tx,
             }
         }
 
@@ -81,9 +82,9 @@ pub mod hive {
                 self.queens.retain(|q| q.is_alive());
                 self.workers.retain(|w| w.is_alive());
                 self.stats.report();
-                self.producer.add_message(self.stats.to_string(), self.stats.get_day());
 
-                //self.producer.produce("hive", &self.stats).await;
+                let msg = Message::new(self.stats.to_string(), self.stats.get_day());
+                self.tx.send(msg).unwrap();
             }
 
             println!("Hive loop finished");
