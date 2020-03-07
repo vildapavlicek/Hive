@@ -8,7 +8,7 @@ pub mod hive {
     use crate::hive::unit::warehouse::Storage;
     use crate::hive::statistics::stats::{Statistics, DeathType};
     use crate::producer::producer::{MyProducer, Message};
-    use std::sync::mpsc::Sender;
+    use tokio::sync::mpsc::{self, Sender};
 
     const WORKERS_AT_START: u32 = 20;
 
@@ -84,7 +84,10 @@ pub mod hive {
                 self.stats.report();
 
                 let msg = Message::new(self.stats.to_string(), self.stats.get_day());
-                self.tx.send(msg).unwrap();
+                match self.tx.send(msg).await {
+                    Ok(_) => (),
+                    Err(v) => println!("Failed to send message over channel, err: {}", v),
+                };
             }
 
             println!("Hive loop finished");
