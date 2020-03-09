@@ -15,7 +15,7 @@ pub mod message {
      "name": "message",
      "fields": [
          {"name": "key", "type": "int", "doc": "Key value for kafka"},
-         {"name": "content", "type": "string", "doc": "contents of the message, statistics of the Hive of the given day"}
+         {"name": "content", "type": "string", "doc": "statistics of the Hive of the given day in JSON format"}
      ]
  }
  "#;
@@ -42,7 +42,6 @@ pub mod message {
             avro_writer.append_ser(&self).unwrap();
             avro_writer.flush().unwrap();
             avro_writer.into_inner()
-
         }
     }
 }

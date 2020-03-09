@@ -21,7 +21,7 @@ pub mod stats {
     }
 
     impl Statistics {
-        pub fn new(queens_alive: u32, ants_alive: u32) -> Self {
+        pub fn new(eggs: u32, queens_alive: u32, ants_alive: u32) -> Self {
             Statistics {
                 day: 0,
                 queens_alive: queens_alive,
@@ -30,7 +30,7 @@ pub mod stats {
                 workers_dead: 0,
                 death_by_age: 0,
                 death_by_hunger: 0,
-                eggs_not_hatched: 0,
+                eggs_not_hatched: eggs,
                 eggs_hatched: 0,
                 stored: false,
             }
@@ -101,4 +101,44 @@ pub mod stats {
             }
         }
     }
+
+    mod test {
+        use super::*;
+    
+        #[test]
+        fn test_increment_eggs_hatched() {
+            let mut stats = Statistics::new(1, 0, 0);
+            stats.increment_egg_hatched();
+
+            assert_eq!(stats.eggs_hatched, 1);
+            assert_eq!(stats.eggs_not_hatched, 0);
+        }
+
+        #[test]
+        fn test_increment_worker_dead_by_age() {
+            let mut stats = Statistics::new(0, 1, 1);
+
+            stats.increment_worker_dead(DeathType::Age);
+            assert_eq!(stats.workers_alive, 0);
+            assert_eq!(stats.workers_dead, 1);
+            assert_eq!(stats.queens_alive, 1);
+            assert_eq!(stats.queens_dead, 0);
+            assert_eq!(stats.death_by_age, 1);
+            assert_eq!(stats.death_by_hunger, 0);
+        }
+
+        #[test]
+        fn test_increment_worker_dead_by_hunger() {
+            let mut stats = Statistics::new(0, 1, 1);
+
+            stats.increment_worker_dead(DeathType::Hunger);
+            assert_eq!(stats.workers_alive, 0);
+            assert_eq!(stats.workers_dead, 1);
+            assert_eq!(stats.queens_alive, 1);
+            assert_eq!(stats.queens_dead, 0);
+            assert_eq!(stats.death_by_age, 0);
+            assert_eq!(stats.death_by_hunger, 1);
+        }
+    }   
 }
+    

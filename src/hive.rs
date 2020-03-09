@@ -10,7 +10,10 @@ pub mod hive {
     use crate::producer::producer::{Message};
     use tokio::sync::mpsc::{Sender};
 
+    const EGGS_AT_START: u32 = 1;
+    const QUEENS_AT_START: u32 = 1;
     const WORKERS_AT_START: u32 = 20;
+    
 
     pub struct Hive {
         queens: Vec<Queen>,
@@ -28,7 +31,7 @@ pub mod hive {
                 workers: Worker::generate_workers(20),
                 eggs: vec![Egg::new()],
                 storage: Storage::new(15000),
-                stats: Statistics::new(1, WORKERS_AT_START),
+                stats: Statistics::new(EGGS_AT_START, QUEENS_AT_START, WORKERS_AT_START),
                 tx: tx,
             }
         }
@@ -47,9 +50,6 @@ pub mod hive {
         }
 
         pub async fn run(&mut self) {
-            
-            // let's add atleast one egg at the start
-            self.eggs.push(Egg::new());
 
             while self.anyone_alive() {
                 self.stats.increment_day();
