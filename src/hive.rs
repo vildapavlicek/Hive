@@ -7,8 +7,8 @@ pub mod hive {
     use crate::hive::unit::units::{Queen, Worker, Egg, Ant, UnitTypes};
     use crate::hive::unit::warehouse::Storage;
     use crate::hive::statistics::stats::{Statistics, DeathType};
-    use crate::producer::producer::{MyProducer, Message};
-    use tokio::sync::mpsc::{self, Sender};
+    use crate::producer::producer::{Message};
+    use tokio::sync::mpsc::{Sender};
 
     const WORKERS_AT_START: u32 = 20;
 
@@ -81,9 +81,8 @@ pub mod hive {
                 self.eggs.retain(|e| !e.is_hatched());
                 self.queens.retain(|q| q.is_alive());
                 self.workers.retain(|w| w.is_alive());
-                self.stats.report();
 
-                let msg = Message::new(self.stats.to_string(), self.stats.get_day());
+                let msg = Message::new(self.stats.to_json_stringify(), self.stats.get_day());
                 match self.tx.send(msg).await {
                     Ok(_) => (),
                     Err(v) => println!("Failed to send message over channel, err: {}", v),

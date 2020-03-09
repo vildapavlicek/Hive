@@ -13,7 +13,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut producer = MyProducer::new("localhost:9092", rx);
     let mut hive = Hive::new(tx);
 
-    println!("init hive_task");
     rt.spawn(
         async move {
             hive.run().await;

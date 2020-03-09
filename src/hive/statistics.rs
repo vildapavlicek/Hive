@@ -1,11 +1,12 @@
 pub mod stats {
+    use serde::{Serialize, Deserialize};
 
     pub enum DeathType {
         Hunger,
         Age
     }
 
-    #[derive(Debug,Clone, Copy)]
+    #[derive(Debug,Clone, Copy, Serialize, Deserialize)]
     pub struct Statistics {
         day: u32,
         queens_alive: u32,
@@ -20,7 +21,6 @@ pub mod stats {
     }
 
     impl Statistics {
-
         pub fn new(queens_alive: u32, ants_alive: u32) -> Self {
             Statistics {
                 day: 0,
@@ -91,26 +91,14 @@ pub mod stats {
             }
         }
 
-        pub fn report(&self) {
-            println!("Day {}", self.day);
-            println!("Queens alive: {} | Queens dead: {}", self.queens_alive, self.queens_dead);
-            println!("Ants alive: {} | Ants dead: {}", self.workers_alive, self.workers_dead);
-            println!("Ants dead by hunger: {} | Ants dead by age: {}", self.death_by_hunger, self.death_by_age);
-            println!("Unhatched eggs: {} | Hatched eggs: {}", self.eggs_not_hatched, self.eggs_hatched);
-        }
-
-        pub fn to_string(&self) -> String{
-           format!("Day {}\n
-            Queens alive: {}\n
-            Queens dead: {}\n
-            Ants alive: {}\n
-            Ants dead: {}\n
-            Ants dead by hunger: {}\n
-            Ants dead by age: {}\n
-            Unhatched eggs: {}\n
-            Hatched eggs: {}", 
-            self.day, self.queens_alive, self.queens_dead, self.workers_alive, self.workers_dead, self.death_by_hunger, self.death_by_age, self.eggs_not_hatched, self.eggs_hatched
-            )
+        pub fn to_json_stringify(&self) -> String {
+            match serde_json::to_string(&self) {
+                Ok(v) => v,
+                Err(v) => {
+                    println!("Error marshalling object to string {}", v);
+                    "".to_string()
+                }
+            }
         }
     }
 }
