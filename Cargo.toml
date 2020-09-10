@@ -8,10 +8,6 @@ edition = "2018"
 
 [dependencies]
 rand = "0.7.3"
-rdkafka = { git = "https://github.com/fede1024/rust-rdkafka.git", branch = "master", features = ["cmake-build"] }
 tokio = { version = "0.2.2", features = ["full"] }
-futures = "0.3"
-avro-rs = "0.6"
-failure = "0.1.5"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
