@@ -19,22 +19,18 @@ pub struct Statistics {
 }
 
 impl Statistics {
-    pub fn new(eggs: u32, queens_alive: u32, ants_alive: u32) -> Self {
+    pub fn new(eggs: u32, queens_alive: u32, workers_alive: u32) -> Self {
         Statistics {
             day: 0,
             queens_alive,
             queens_dead: 0,
-            workers_alive: ants_alive,
+            workers_alive,
             workers_dead: 0,
             death_by_age: 0,
             death_by_hunger: 0,
             eggs_not_hatched: eggs,
             eggs_hatched: 0,
         }
-    }
-
-    pub fn get_day(&self) -> u32 {
-        self.day
     }
 
     pub fn increment_day(&mut self) {
@@ -84,16 +80,6 @@ impl Statistics {
         match death_type {
             DeathType::Hunger => self.death_by_hunger += 1,
             DeathType::Age => self.death_by_age += 1,
-        }
-    }
-
-    pub fn to_json(&self) -> String {
-        match serde_json::to_string(&self) {
-            Ok(v) => v,
-            Err(v) => {
-                println!("Error marshalling object to string {}", v);
-                "".to_string()
-            }
         }
     }
 }

@@ -4,10 +4,9 @@ pub mod warehouse;
 
 extern crate rand;
 
-use std::borrow::BorrowMut;
-use std::io::Read;
 use {
     statistics::*,
+    std::borrow::BorrowMut,
     unit::{Ant, Egg, Queen, UnitTypes, Worker},
     warehouse::Storage,
 };
@@ -18,8 +17,6 @@ const WORKERS_AT_START: u32 = 20;
 
 pub struct Hive {
     ants: Vec<Box<dyn Ant>>,
-    // queens: Vec<Queen>,
-    // workers: Vec<Worker>,
     eggs: Vec<Egg>,
     storage: Storage,
     stats: Statistics,
@@ -27,7 +24,7 @@ pub struct Hive {
 
 impl Hive {
     pub fn new() -> Self {
-        let mut workers = Worker::generate_workers(20);
+        let workers = Worker::generate_workers(20);
         let mut ants: Vec<Box<dyn Ant>> = Vec::new();
 
         for worker in workers.into_iter() {
@@ -44,21 +41,7 @@ impl Hive {
         }
     }
 
-    pub fn anyone_alive(&self) -> bool {
-        // if self.queens.len() > 0 {
-        //     return true;
-        // } else if self.eggs.len() > 0 {
-        //     return true;
-        // } else if self.workers.len() > 0 {
-        //     return true;
-        // }
-
-        // false
-
-        !self.ants.is_empty() || !self.eggs.is_empty()
-    }
-
-    pub async fn run(mut self) {
+    pub fn run(mut self) {
         let ants: &mut Vec<Box<dyn Ant>> = self.ants.as_mut();
         let eggs = self.eggs.as_mut();
         let storage = self.storage.borrow_mut();

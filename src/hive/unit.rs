@@ -24,7 +24,7 @@ const QUEEN_LIFETIME_MAX: u32 = 366;
 
 #[derive(Debug)]
 pub struct Queen {
-    apetite: u8,
+    appetite: u8,
     lay_egg_cooldown: u8,
     lifetime: u32,
     is_alive: bool,
@@ -36,7 +36,7 @@ impl Queen {
         let rng_lifetime = rng.gen_range(QUEEN_LIFETIME_MIN, QUEEN_LIFETIME_MAX);
 
         Queen {
-            apetite: QUEEN_APPETITE,
+            appetite: QUEEN_APPETITE,
             lay_egg_cooldown: QUEEN_LAY_EGG_COOLDOWN,
             lifetime: rng_lifetime,
             is_alive: true,
@@ -46,7 +46,7 @@ impl Queen {
 
 impl Ant for Queen {
     fn eat(&self) -> u8 {
-        self.apetite
+        self.appetite
     }
 
     fn work(&mut self) -> Option<u8> {
@@ -90,7 +90,7 @@ const WORKER_LIFETIME_MAX: u8 = 61;
 
 #[derive(Debug)]
 pub struct Worker {
-    apetite: u8,
+    appetite: u8,
     work_cooldown: u8,
     work_efficiency: u8,
     lifetime: u8,
@@ -104,7 +104,7 @@ impl Worker {
             rand::thread_rng().gen_range(WORKER_EFFICIENCY_MIN, WORKER_EFFICIENCY_MAX);
 
         Worker {
-            apetite: WORKER_APPETITE,
+            appetite: WORKER_APPETITE,
             work_cooldown: WORKER_COOLDOWN,
             work_efficiency: rng_efficiency,
             lifetime: rng_lifetime,
@@ -127,7 +127,7 @@ impl Worker {
 
 impl Ant for Worker {
     fn eat(&self) -> u8 {
-        self.apetite
+        self.appetite
     }
 
     fn work(&mut self) -> Option<u8> {
